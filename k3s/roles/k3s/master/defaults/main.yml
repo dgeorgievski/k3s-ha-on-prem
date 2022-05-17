@@ -1,0 +1,5 @@
+---
+# k3s_server_location: /var/lib/rancher/k3s
+k3s_server_location: /data/k3s
+
+etcd_token: K10fed78829699c72a7ab14500b1a5631eb25012ec800adb5f3b2bd5d0e2cdb2f54::server:eb4576a750d19f90749e1d95ceec346c

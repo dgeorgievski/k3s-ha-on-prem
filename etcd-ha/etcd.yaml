@@ -1,0 +1,5 @@
+- hosts: etcd
+  remote_user: k3s-iac
+  become: yes
+  roles:
+    - etcd

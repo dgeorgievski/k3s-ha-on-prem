@@ -1,0 +1,1 @@
+etcd_pki_dir: "{{ playbook_dir }}/pki"

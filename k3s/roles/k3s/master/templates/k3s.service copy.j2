@@ -1,0 +1,37 @@
+[Unit]
+Description=Lightweight Kubernetes
+Documentation=https://k3s.io
+After=network-online.target
+
+[Service]
+Type=notify
+Environment="ETCDCTL_API=3"
+ExecStartPre=-/sbin/modprobe br_netfilter
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/k3s server \
+ --disable traefik \
+ --disable-network-policy \
+ --disable servicelb \
+ --flannel-backend none \
+ --selinux \
+ --tls-san {{ ansible_host | quote }} \
+ --data-dir {{ k3s_server_location }} \
+ --datastore-endpoint {{ etcdEndpoints | quote }} \
+ --datastore-cafile /etc/etcd/server-ca.crt \
+ --datastore-certfile /etc/etcd/{{etcdHost}}-server.crt \
+ --datastore-keyfile /etc/etcd/{{etcdHost}}-server.key \
+ --node-taint CriticalAddonsOnly=true:NoExecute {{ extra_server_args | default("") }} 
+KillMode=process
+Delegate=yes
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNOFILE=1048576
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+TimeoutStartSec=0
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

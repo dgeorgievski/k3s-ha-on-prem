@@ -1,0 +1,11 @@
+---
+k3s_version: v1.23.5+k3s1
+ansible_user: "{{ lookup('env','USER') }}"
+k3s_user: "k3s-iac"
+exec_user_home: "{{ lookup('env','HOME') }}"
+systemd_dir: /etc/systemd/system
+master_ip: "{{ hostvars[groups['master'][0]]['ansible_host'] | default(groups['master'][0]) }}"
+extra_server_args: ""
+extra_agent_args: ""
+k3s_token: K108fd501054759203c35cdc5f9b2e750ade6c427dd3c59217420c96f9c88211b09::server:de27c9e0c5930dff5a64ed53cc6d1584
+# K10a04d786b7c6077998841dec573157c0bb41c0ef8ca408355d935aced02790519::server:f946ca3e17f166f08dfd93b480828fca

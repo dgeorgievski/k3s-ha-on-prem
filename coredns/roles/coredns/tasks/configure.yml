@@ -1,0 +1,28 @@
+---
+- name: Copy configuration file
+  template:
+    src: Corefile
+    dest: /etc/coredns/Corefile
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart coredns
+
+# TODO: is this needed?
+# - name: Copy key files
+#   template:
+#     src: "{{ item }}"
+#     dest: /etc/coredns/keys
+#     owner: "{{ coredns_system_user }}"
+#     group: "{{ coredns_system_group }}"
+#     mode: 0400
+#   with_fileglob: "{{ coredns_key_files_paths }}"
+
+# - name: Copy zone files
+#   template:
+#     src: "{{ item }}"
+#     dest: /etc/coredns/zones
+#     owner: root
+#     group: root
+#     mode: 0644
+#   with_fileglob: "{{ coredns_zone_files_paths }}"

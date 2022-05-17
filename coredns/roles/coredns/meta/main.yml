@@ -1,0 +1,30 @@
+---
+galaxy_info:
+  author: cloudalchemy
+  role_name: coredns
+  description: CoreDNS installation
+  license: MIT
+  company: none
+  min_ansible_version: 2.7
+  platforms:
+    - name: Ubuntu
+      versions:
+        - bionic
+        - xenial
+    - name: Debian
+      versions:
+        - stretch
+        - buster
+    - name: EL
+      versions:
+        - 7
+        - 8
+    - name: Fedora
+      versions:
+        - 30
+        - 31
+  galaxy_tags:
+    - dns
+    - system
+
+dependencies: []

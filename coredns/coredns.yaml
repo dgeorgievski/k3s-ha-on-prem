@@ -1,0 +1,8 @@
+- hosts: coredns
+  remote_user: k3s-iac
+  become: yes
+  roles:
+    - name: coredns
+      vars: 
+        coredns_config_file: conf/Corefile
+

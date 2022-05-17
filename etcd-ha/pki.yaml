@@ -1,0 +1,9 @@
+- hosts: localhost
+  connection: local
+  pre_tasks:
+    - name: Create PKI directory
+      file:
+        path: "{{ etcd_pki_dir }}"
+        state: directory
+  roles:
+    - pki

@@ -1,0 +1,113 @@
+- name: Download Etcd
+  get_url:
+    url: 'https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz'
+    dest: '/tmp/etcd-{{ etcd_version }}-linux-amd64.tar.gz'
+    mode: 0644
+
+- name: Extract Etcd archive
+  unarchive:
+    src: '/tmp/etcd-{{ etcd_version }}-linux-amd64.tar.gz'
+    dest: /usr/local/bin/
+    remote_src: true
+    exclude:
+      - Documentation
+      - README-etcdctl.md
+      - README.md
+      - READMEv2-etcdctl.md
+    extra_opts: "--strip-components=1"
+
+- name: Create etcd user
+  user:
+    name: etcd
+    shell: /usr/sbin/nologin
+    comment: "etcd user"
+    createhome: false
+    system: true
+    state: present
+
+- name: Create config directory
+  file:
+    path: /etc/etcd
+    state: directory
+    owner: etcd
+    group: etcd
+    mode: 0755
+    recurse: true
+    
+- name: Create /data/etcd directory
+  file:
+    path: /data/etcd
+    state: directory
+    owner: etcd
+    group: etcd
+    mode: 0755
+    recurse: true
+
+
+# - name: Create /var/lib/etcd directory
+#   file:
+#     path: /var/lib/etcd
+#     state: directory
+#     owner: etcd
+#     group: etcd
+#     mode: 0755
+
+- name: Copy ca certificates
+  copy:
+    src: "{{ etcd_pki_dir }}/{{ item }}.crt"
+    dest: /etc/etcd
+    owner: etcd
+    group: root
+    mode: 0644
+  loop:
+    - server-ca
+    - peer-ca
+
+- name: copy certificates and keys to etcd1
+  copy:
+    src: "{{ item }}"
+    dest: /etc/etcd
+    owner: etcd
+    group: root
+  loop:
+    - '{{ etcd_pki_dir }}/etcd1-server.crt'
+    - '{{ etcd_pki_dir }}/etcd1-server.key'
+    - '{{ etcd_pki_dir }}/etcd1-peer.crt'
+    - '{{ etcd_pki_dir }}/etcd1-peer.key'
+  when: inventory_hostname == 'etcd1'
+
+- name: copy certificates and keys to etcd2
+  copy:
+    src: "{{ item }}"
+    dest: /etc/etcd
+    owner: etcd
+    group: root
+  loop:
+    - '{{ etcd_pki_dir }}/etcd2-server.crt'
+    - '{{ etcd_pki_dir }}/etcd2-server.key'
+    - '{{ etcd_pki_dir }}/etcd2-peer.crt'
+    - '{{ etcd_pki_dir }}/etcd2-peer.key'
+  when: inventory_hostname == 'etcd2'
+
+- name: copy certificates and keys to etcd3
+  copy:
+    src: "{{ item }}"
+    dest: /etc/etcd
+    owner: etcd
+    group: root
+  loop:
+    - '{{ etcd_pki_dir }}/etcd3-server.crt'
+    - '{{ etcd_pki_dir }}/etcd3-server.key'
+    - '{{ etcd_pki_dir }}/etcd3-peer.crt'
+    - '{{ etcd_pki_dir }}/etcd3-peer.key'
+  when: inventory_hostname == 'etcd3'
+
+- name: Copy systemd unit file
+  template:
+    src: "lib/systemd/system/etcd.service.j2"
+    dest: "/lib/systemd/system/etcd.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart etcd

@@ -1,0 +1,17 @@
+---
+coredns_version: 1.8.3
+# see https://github.com/coredns/coredns/releases/download/v1.8.3/coredns_1.8.3_linux_amd64.tgz.sha256
+coredns_checksum: a670a6ad7d45455841d8384a892373e0abc38b178252cb028866dbf84d442561
+coredns_dns_port: 53
+
+# Config file name, searched in ansible templates path.
+coredns_config_file: ""
+
+# Use a local binary instead of the official release.
+coredns_binary_local_dir: ""
+
+coredns_zone_files_paths:
+  - "conf/zones/*"
+
+coredns_key_files_paths:
+  - "conf/keys/*"

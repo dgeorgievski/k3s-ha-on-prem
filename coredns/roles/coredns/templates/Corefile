@@ -1,0 +1,17 @@
+taina.dev:53 {
+    etcd {
+        path /taina
+        endpoint {{ etcdEndpoints }}
+    }
+
+    log
+    errors
+    cache
+    whoami
+    health
+}
+
+.:53 {
+    forward . /etc/resolv.conf
+    log
+}    
